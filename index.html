@@ -153,7 +153,7 @@ function Sun(color, percentage) {
 
 var track = 0;
 var counter = 0;
-
+var freq = 3;
 function DrawShot(bullet) {
 	
 	if (bullet.percentage > sun.percentage) {
@@ -176,8 +176,8 @@ function DrawShot(bullet) {
 		sun.percentage = sun.percentage + 0.01;
 		counter++;
 
-		if (counter%3 == 0) {document.getElementById("myCanvas").style.background = getRandomColor();}
-		if (counter == 8) {track = 1; on = false;}
+		if (counter%freq == 0) {document.getElementById("myCanvas").style.background = getRandomColor();}
+		if (counter == 8) {track = 1; on = false; freq = 1;}
 		bullet.toBeDestroyed = true;
 	}
 }
