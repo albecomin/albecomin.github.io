@@ -176,7 +176,7 @@ function DrawShot(bullet) {
 		sun.percentage = sun.percentage + 0.01;
 		counter++;
 
-		if (counter%3 == 0) {document.getElementById("body").style.background = getRandomColor();}
+		if (counter%3 == 0) {document.getElementById("myCanvas").style.background = getRandomColor();}
 		if (counter == 8) {track = 1; on = false;}
 		bullet.toBeDestroyed = true;
 	}
