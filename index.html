@@ -176,6 +176,7 @@ function DrawShot(bullet) {
 		sun.percentage = sun.percentage + 0.01;
 		counter++;
 
+		if (counter%3 == 0) {document.getElementById("body").style.background = getRandomColor();}
 		if (counter == 8) {track = 1; on = false;}
 		bullet.toBeDestroyed = true;
 	}
@@ -246,6 +247,18 @@ BufferLoader.prototype.load = function() {
   for (var i = 0; i < this.urlList.length; ++i)
   this.loadBuffer(this.urlList[i], i);
 }
+
+
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 
 
 function init() {
