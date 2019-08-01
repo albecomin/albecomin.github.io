@@ -252,7 +252,7 @@ function init() {
 context = new AudioContext();
 
 switch(track) {
-	case "0":
+	case 0:
 	bufferLoader = new BufferLoader(
 context,
 [
@@ -266,11 +266,11 @@ context,
 finishedLoading
 );
 
-	
+
 bufferLoader.load();
 	break;
 
-	case "1":
+	case 1:
 	bufferLoader = new BufferLoader(
 context,
 [
