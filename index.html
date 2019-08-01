@@ -265,6 +265,9 @@ context,
 ],
 finishedLoading
 );
+
+	
+bufferLoader.load();
 	break;
 
 	case "1":
@@ -280,6 +283,9 @@ context,
 ],
 finishedLoading
 );
+
+
+bufferLoader.load();
 	break;
 
 	case "2":
@@ -292,7 +298,6 @@ finishedLoading
 
 }
 
-bufferLoader.load();
 function finishedLoading(bufferList) {
 // Create two sources and play them both together.
 var source1 = context.createBufferSource();
