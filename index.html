@@ -4,326 +4,37 @@
 <head>
 	<style>
 		html, body {
-			height: 100%; margin: 0;
+			height: 100%; max-height: 100%; 
+			width: 100%; max-width: 100%; 
+			overflow: hidden;
+			user-select: none;
+			margin: 0;
+			font-size: 30px; font-family: 'Courier New', Courier, monospace; font-weight: 700; color: #b4b9c5
 		}
 	</style>
+
+	<script src="js\objects.js"></script>
+	<script src="js\functions.js"></script>
+	<script src="js\sound.js"></script>
+	<script src="js\game.js"></script>
+
 </head>
-<body onclick="Shot()">
-<!-- 	<div style="position: absolute; background: red; border-radius: 50%; height: 5vw; width:5vw; display: flex;  margin: auto;">
+<body onclick="Shot()" style="background: #070007;">
+	<div style="min-width: 100vw; width: 100vw; height: 20%; background: none">
+		<div style="display: flex; width: 100%; height: 50%; line-height: 100%;">
+			<text id="shotsIndicator" style="display: flex; margin: auto;">Shots</text>
+			<text id="levelIndicator" style="display: flex; margin: auto;">Level</text>
+			<text id="scoreIndicator" style="display: flex; margin: auto;">Score</text>
+		</div>
+		<div id="life" style="display: flex; width: 100%; background:#b4b9c5; height: 50%;" onclick="Play()"></div>
 	</div>
-	<div id="orbit" style="position: absolute; background: none; border: solid 4px black; border-radius: 50%; height: 30vw; width:30vw; display: flex; margin: auto;">
-	</div>	 -->
-
-	<div style="display: flex; width: 100%; height: 100%;">
-
-		<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #000000; height: 90%; display: flex; margin: auto;">
+	<div style="display: flex; width: 100%; height: 80%; max-height: 80%; overflow: hidden; background: none">
+		<canvas id="myCanvas" width="1000" height="1000" style="height: 100%; display: flex; margin: auto;">
 			Your browser does not support the HTML5 canvas tag.
 		</canvas>
+		<div id="gameOver" style="width: 100%; height: 100%; display: none; margin: auto;" onclick="Restart()">
+			<text style="display: flex; margin: auto; font-size: 2rem; width: 50%;">Just a fucking loser.</text>
+		</div>
 	</div>
 </body>
-
-<script type="text/javascript">
-
-const canvas = document.getElementById("myCanvas");
-const d = canvas.getContext("2d");
-
-
-function Circle(x,y,r){
-  this.x=x;
-  this.y=y;
-  this.r=r;
-}
-
-function Spaceship(alpha, color){
-  this.alpha = alpha;
-  this.color = color;
-}
-
-function StartSpinning() {
-	//timer=setInterval(Spin, 10);
-	window.requestAnimationFrame(Spin);
-}
-
-
-
-var xSPA = 0;
-var ySPA = 0;
-
-
-function Spin() {		
-	d.save();
-	d.clearRect(0,0,1000,1000); // clear canvas
-
-	DrawBackground();
-
-	d.save()
-	UpdateShots();
-	d.restore()
-
-
-	d.save();
-	let _alpha = spaceship.alpha / 360 * 2 * Math.PI;		
-	xSPA = orbit.x + orbit.r * Math.cos(_alpha);
-	ySPA = orbit.y + orbit.r * Math.sin(_alpha);
-	//console.log(_alpha, xSPA, ySPA)
-	d.beginPath();	
-	d.arc(xSPA, ySPA, 20, 0, 2 * Math.PI);
-	d.fillStyle = spaceship.color
-	d.fill();
-	d.closePath();
-
-	d.restore();
-
-	spaceship.alpha++;
-	if(spaceship.alpha==360) {spaceship.alpha = 0;}
-
-	window.requestAnimationFrame(Spin);
-}
-
-
-const orbit = new Circle(500, 500, 250)
-const spaceship = new Spaceship(0, "blue")
-
-const sun = new Sun("red", 0.1)
-const shield = new Sun("orange", 0.3)
-
-
-var gamma1 = 0.5 * Math.PI;
-var ampl1 = 0.25 * Math.PI;
-
-function DrawBackground() {
-	d.beginPath();
-	d.fillStyle = "red";
-	d.arc(orbit.x, orbit.y, orbit.r*sun.percentage, 0, 2 * Math.PI);
-	d.fill();
-	d.closePath();
-
-	d.beginPath();
-	d.strokeStyle = "orange";
-	d.lineWidth = 10;
-	d.arc(orbit.x, orbit.y, orbit.r*(shield.percentage), 0, gamma1);
-	d.stroke();
-	d.closePath();
-	d.beginPath();
-	d.strokeStyle = "orange";
-	d.lineWidth = 10;
-	d.arc(orbit.x, orbit.y, orbit.r*(shield.percentage),  gamma1 + ampl1, 2 * Math.PI);
-	d.stroke();
-	d.closePath();
-	// d.beginPath();
-	// d.fillStyle = "orange";
-	// d.arc(orbit.x, orbit.y, orbit.r*(sun.percentage + 0.2),  1.32 * Math.PI, 1.82 * Math.PI);
-	// d.fill();
-	// d.closePath();
-
-	d.beginPath();
-	d.strokeStyle = "black"
-	d.lineWidth = 10;
-	d.arc(orbit.x, orbit.y, orbit.r, 0, 2 * Math.PI);
-	d.stroke();
-	d.closePath();
-}
-
-var bullets = [];
-
-function toRad(a) {
-	return  a/ 360 * 2 * Math.PI;
-}
-
-var on = false;
-
-function Shot() {
-	console.log(spaceship.alpha)
-	if (!on) { init(); }
-	on = true;
-	bullets.push(new Bullet(toRad(spaceship.alpha), 1, 0.1))
-}
-
-function Bullet(alpha, percentage, velocity) {
-	this.alpha = alpha;
-	this.percentage = percentage;
-	this.velocity = velocity;
-	this.toBeDestroyed = false;
-}
-
-function Sun(color, percentage) {
-	this.color = color;
-	this.percentage = percentage;
-}
-
-var track = 0;
-var counter = 0;
-var freq = 3;
-function DrawShot(bullet) {
-	
-	if (bullet.percentage > sun.percentage) {
-
-		if ((bullet.percentage < (shield.percentage + bullet.velocity)) && (bullet.alpha < gamma1 || bullet.alpha > (gamma1 + ampl1))) {
-			bullet.velocity = (-1) * bullet.velocity;	
-		}
-
-		bullet.percentage = bullet.percentage - bullet.velocity;
-
-		var _xSHOT = orbit.x + bullet.percentage * orbit.r * Math.cos(bullet.alpha);
-		var _ySHOT = orbit.y + bullet.percentage * orbit.r * Math.sin(bullet.alpha);
-
-		d.beginPath();		
-		d.arc(_xSHOT, _ySHOT, 10, 0, 2 * Math.PI);
-		d.fillStyle = "darkgreen"
-		d.fill();
-		d.closePath();	
-	} else {
-		sun.percentage = sun.percentage + 0.01;
-		counter++;
-
-		if (counter%freq == 0) {document.getElementById("myCanvas").style.background = getRandomColor();}
-		if (counter == 8) {track = 1; on = false; freq = 1;}
-		bullet.toBeDestroyed = true;
-	}
-}
-
-function UpdateShots() {
-	bullets = bullets.filter(function(x) { return !x.toBeDestroyed; });
-	bullets = bullets.filter(function(x) { return x.percentage < 5; });
-	let n = bullets.length;
-	if (n > 0) {
-		for (var i = 0; i < n; i++) {
-			DrawShot(bullets[i]);
-		}
-	}		
-}
-
-StartSpinning();
-
-//window.onload = init;
-var context;
-var bufferLoader;
-
-
-
-function BufferLoader(context, urlList, callback) {
-  this.context = context;
-  this.urlList = urlList;
-  this.onload = callback;
-  this.bufferList = new Array();
-  this.loadCount = 0;
-}
-
-BufferLoader.prototype.loadBuffer = function(url, index) {
-  // Load buffer asynchronously
-  var request = new XMLHttpRequest();
-  request.open("GET", url, true);
-  request.responseType = "arraybuffer";
-
-  var loader = this;
-
-  request.onload = function() {
-    // Asynchronously decode the audio file data in request.response
-    loader.context.decodeAudioData(
-      request.response,
-      function(buffer) {
-        if (!buffer) {
-          alert('error decoding file data: ' + url);
-          return;
-        }
-        loader.bufferList[index] = buffer;
-        if (++loader.loadCount == loader.urlList.length)
-          loader.onload(loader.bufferList);
-      },
-      function(error) {
-        console.error('decodeAudioData error', error);
-      }
-    );
-  }
-
-  request.onerror = function() {
-    alert('BufferLoader: XHR error');
-  }
-
-  request.send();
-}
-
-BufferLoader.prototype.load = function() {
-  for (var i = 0; i < this.urlList.length; ++i)
-  this.loadBuffer(this.urlList[i], i);
-}
-
-
-
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
-
-
-
-function init() {
-context = new AudioContext();
-
-switch(track) {
-	case 0:
-	bufferLoader = new BufferLoader(
-context,
-[
-'../sounds/people_Bass1.wav'
-//,
-
-//Putting It All Together | 11
-
-//'../sounds/hyper-reality/laughter.wav',
-],
-finishedLoading
-);
-
-
-bufferLoader.load();
-	break;
-
-	case 1:
-	bufferLoader = new BufferLoader(
-context,
-[
-'../sounds/people_Kick1.wav'
-//,
-
-//Putting It All Together | 11
-
-//'../sounds/hyper-reality/laughter.wav',
-],
-finishedLoading
-);
-
-
-bufferLoader.load();
-	break;
-
-	case "2":
-	break;
-
-	default:
-	break;
-}
-
-
-}
-
-function finishedLoading(bufferList) {
-// Create two sources and play them both together.
-var source1 = context.createBufferSource();
-//var source2 = context.createBufferSource();
-source1.buffer = bufferList[0];
-source1.loop = true;
-//source2.buffer = bufferList[1];
-source1.connect(context.destination);
-//source2.connect(context.destination);
-source1.start(0);
-//source2.start(0);
-}
-
-</script>
-
 </html>
