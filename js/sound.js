@@ -2,8 +2,6 @@
 var context;
 var bufferLoader;
 
-
-
 function BufferLoader(context, urlList, callback) {
   this.context = context;
   this.urlList = urlList;
@@ -53,66 +51,65 @@ BufferLoader.prototype.load = function() {
 
 
 
+var soundsArray =  ['../sounds/paul_Wobble2.wav', '../sounds/people_Hats.wav', '../sounds/people_Kick1.wav']
+var soundsArrayLen = soundsArray.length;
+
+function Sample(name, source) {
+  this.name = name;
+  this.source = source;
+  this.on = false;
+}
+
 
 function init() {
-context = new AudioContext();
-
-switch(track) {
-  case 0:
-  bufferLoader = new BufferLoader(
-context,
-[
-'../sounds/people_Bass1.wav'
-//,
-
-//Putting It All Together | 11
-
-//'../sounds/hyper-reality/laughter.wav',
-],
-finishedLoading
-);
-
-
-bufferLoader.load();
-  break;
-
-  case 1:
-  bufferLoader = new BufferLoader(
-context,
-[
-'../sounds/people_Kick1.wav'
-//,
-
-//Putting It All Together | 11
-
-//'../sounds/hyper-reality/laughter.wav',
-],
-finishedLoading
-);
-
-
-bufferLoader.load();
-  break;
-
-  case "2":
-  break;
-
-  default:
-  break;
+  context = new AudioContext();
+  console.log("audio init")
+  bufferLoader = new BufferLoader(context, soundsArray, finishedLoading);
+  bufferLoader.load();
 }
 
-
-}
+var samples = [];
 
 function finishedLoading(bufferList) {
-// Create two sources and play them both together.
-var source1 = context.createBufferSource();
-//var source2 = context.createBufferSource();
-source1.buffer = bufferList[0];
-source1.loop = true;
-//source2.buffer = bufferList[1];
-source1.connect(context.destination);
-//source2.connect(context.destination);
-source1.start(0);
-//source2.start(0);
+
+  for(var i = 0; i < soundsArrayLen; i++) {
+    console.log(soundsArray[i]);
+    let _sample = new Sample(soundsArray[i], context.createBufferSource());
+    _sample.source.buffer = bufferList[i];
+    _sample.source.loop = true;
+    _sample.source.connect(context.destination);    
+    _sample.on = false;
+    samples.push(_sample);
+  }
 }
+
+
+function UpdateSound() {
+  switch(game.level) {
+    case 0:
+      if (!samples[0].on) { samples[0].source.start(barLevelUp); samples[0].on = true; };
+      break;
+    case 1:      
+      if (!samples[1].on) { 
+          samples[1].source.start(barLevelUp); samples[1].on = true; 
+      };
+      break;
+    case 2:
+      if (!samples[2].on) { samples[2].source.start(barLevelUp); samples[2].on = true; };
+      break;
+  }
+}
+
+function Sounds_PlayPause() {
+  
+  if(context.state === 'running') {
+    context.suspend(); //.then(function() {susresBtn.textContent = 'Resume context';});
+  } else if(context.state === 'suspended') {
+    context.resume()//.then(function() { susresBtn.textContent = 'Suspend context'; });  
+  }
+}
+
+
+// context.onstatechange = function() {
+//   console.log(context.state);
+// }

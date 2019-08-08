@@ -31,4 +31,6 @@ function Game() {
 	this.life = 100;
 	this.score = 0;
 	this.initialShots = 10;
+
+	this.isRunning = false;
 }

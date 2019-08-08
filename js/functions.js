@@ -29,6 +29,29 @@ function DrawTheSun(sun, orbit) {
 	d.drawImage(img, 500-orbit.r*sun.percentage, 500-orbit.r*sun.percentage, orbit.r*sun.percentage * 2, orbit.r*sun.percentage * 2);
 }
 
+
+var strobo = false;
+
+var aaa = 0;
+function Strobo(orbit) {
+	aaa += 25;
+
+	vel_shield = parseInt(Math.sin(toRad(aaa))*1,10);
+
+	strobo = !strobo;
+	d.beginPath();
+	d.fillStyle = "rgba(255,255,255, "+vel_shield+")"; // strobo ? "white" : "black";
+	d.shadowOffsetX = 0;
+	d.shadowOffsetY = 0;
+	d.shadowBlur = 100;
+	d.shadowColor = "#144955";
+	d.arc(orbit.x, orbit.y, orbit.r, 0, 2 * Math.PI);
+	d.fill();
+	d.closePath();
+	d.strokeStyle = 'black';
+	d.drawImage(img, 500-orbit.r*sun.percentage, 500-orbit.r*sun.percentage, orbit.r*sun.percentage * 2, orbit.r*sun.percentage * 2);
+}
+
 function DrawTheShield(shield, orbit, gamma0) {
 	var _gammaA = gamma0;
 	var _gammaB = _gammaA + full;
@@ -74,7 +97,7 @@ function DrawTheShield(shield, orbit, gamma0) {
 	d.closePath();
 }
 
-function InitBackground() {
+function InitBackground() {	
 	orbit.r = 1;	
 	InitialAnimation();
 
@@ -121,51 +144,10 @@ function InitialAnimation() {
 
 var stop = true;
 
-function StartSpinning() {
-	stop = false;
-	window.requestAnimationFrame(Spin);
-}
-function StopSpinning() {
-	stop = true;
-}
+
 
 function Restart() {
 	location.reload(true);
-}
-
-function Spin() {		
-	d.save();
-	d.clearRect(0,0,1000,1000); // clear canvas
-
-	DrawBackground();
-
-	d.save()
-	UpdateShots();
-	d.restore()
-
-
-	d.save();
-	let _alpha = spaceship.alpha / 360 * 2 * Math.PI;		
-	xSPA = orbit.x + orbit.r * Math.cos(_alpha);
-	ySPA = orbit.y + orbit.r * Math.sin(_alpha);
-	//console.log(_alpha, xSPA, ySPA)
-	d.beginPath();	
-	d.arc(xSPA, ySPA, spaceship.r, 0, 2 * Math.PI);
-	d.shadowOffsetX = 0;
-	d.shadowOffsetY = 0;
-	d.shadowBlur = 100;
-	d.shadowColor = spaceship.color;
-	d.fillStyle = spaceship.color
-	
-	d.fill();
-	d.closePath();
-
-	d.restore();
-
-	spaceship.alpha += vel_spaceship;
-	if(spaceship.alpha==360) {spaceship.alpha = 0;}
-
-	if(!stop) window.requestAnimationFrame(Spin);
 }
 
 function GameOver(_bool) {
@@ -182,8 +164,7 @@ function Shot() {
 	
 	if(stop) return;
 
-	if (!on && sound) { init(); }
-	on = true;
+	
 	if (game.level >= 2) game.initialShots = 20;
 	shotsIndicator.innerHTML = "Shots " + (game.initialShots - bullets.length);
 	if(bullets.length < game.initialShots) {
@@ -207,7 +188,7 @@ function DrawBackground() {
 	}
 	
 	xxx++;
-	console.log(parseInt(Math.sin(toRad(xxx))*10,10))
+	//console.log(parseInt(Math.sin(toRad(xxx))*10,10))
 	if(game.level >= 3) { vel_shield = parseInt(Math.sin(toRad(xxx))*10,10); }	
 }
 
@@ -279,12 +260,6 @@ function DrawShot(bullet) {
 		game.score++;
 		scoreIndicator.innerHTML = "Score " + game.score;
 
-		//if (counter%freq == 0) {document.getElementById("myCanvas").style.background = getRandomColor();}
-		if (game.score%5 == 0) {
-			track = 1; on = false; 
-			game.level = game.score/5;			
-			levelIndicator.innerHTML = "Level " + game.level;
-		}
 		bullet.toBeDestroyed = true;
 
 		if (game.level == 5) {
@@ -294,6 +269,7 @@ function DrawShot(bullet) {
 }
 
 function UpdateShots() {	
+	d.save()
 	bullets = bullets.filter(function(x) { return !x.toBeDestroyed; });
 	bullets = bullets.filter(function(x) { return x.percentage < 5; });
 	let n = bullets.length;
@@ -301,5 +277,31 @@ function UpdateShots() {
 		for (var i = 0; i < n; i++) {
 			DrawShot(bullets[i]);
 		}
-	}		
+	}	
+	d.restore()	
+}
+
+
+function UpdateSpaceship() {		
+	d.save();
+	let _alpha = spaceship.alpha / 360 * 2 * Math.PI;		
+	xSPA = orbit.x + orbit.r * Math.cos(_alpha);
+	ySPA = orbit.y + orbit.r * Math.sin(_alpha);
+	d.beginPath();	
+	d.arc(xSPA, ySPA, spaceship.r, 0, 2 * Math.PI);
+	d.shadowOffsetX = 0;
+	d.shadowOffsetY = 0;
+	d.shadowBlur = 100;
+	d.shadowColor = spaceship.color;
+	d.fillStyle = spaceship.color
+	
+	d.fill();
+	d.closePath();
+
+	d.restore();
+}
+
+function ClearCanvas() {
+	d.save();
+	d.clearRect(0,0,1000,1000);
 }

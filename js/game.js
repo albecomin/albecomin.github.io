@@ -1,3 +1,4 @@
+//#region VARIABLES
 var body;
 var canvas;
 var d;
@@ -27,8 +28,9 @@ var gamma4;
 var gamma5;
 var gamma6;
 
-var isRunning = false;
 var isGameOver = false;
+//#endregion
+
 
 window.onload = function() {
 	body = document.getElementsByTagName("body")[0];
@@ -38,32 +40,122 @@ window.onload = function() {
 	levelIndicator = document.getElementById("levelIndicator");
 	scoreIndicator = document.getElementById("scoreIndicator");
 	shotsIndicator = document.getElementById("shotsIndicator");
+	timeIndicator = document.getElementById("timeIndicator");
 	gameOver = document.getElementById("gameOver");
-
 	
 	game = new Game();
 
 	InitBackground();
 
 	InitTouch();
+	
+	if (sound) { init();}
 
 }
 
+function Play() {	
+	console.log("play")
+	
+	Graphics_StartStop();
+	Sounds_PlayPause();
+}
 
 
-
-
-function Play() {
-	if (!isRunning) {
-		StartSpinning();
-		isRunning = true;
+function Graphics_StartStop() {
+	if (!game.isRunning) {
+		stop = false;
+		window.requestAnimationFrame(UpdateGraphics);
 	} else {
-		StopSpinning();
-		isRunning = false;
-	}
-    
-
+		stop = true;
+	}	
 }
+
+var levelUp = false;
+
+var barLevelUp;
+
+function UpdateGraphics() {	
+
+	CountTime();
+
+	ClearCanvas();
+
+						
+	if (time < barLevelUp) {
+
+		console.log(time, barLevelUp)
+
+		//DrawBackground();
+		bullets = [];
+		Strobo(orbit);
+		
+		UpdateShots();
+
+		UpdateSpaceship();
+
+	} else {
+		levelIndicator.innerHTML = "Level " + game.level;
+		levelUp = false;
+		console.log("next level")
+					
+		UpdateLevel();
+		
+		UpdateSound();
+
+		DrawBackground();
+
+		UpdateShots();
+
+		UpdateSpaceship();
+	} 		
+ 
+	spaceship.alpha += vel_spaceship;
+	if(spaceship.alpha==360) {spaceship.alpha = 0;}
+
+	if(!stop) {window.requestAnimationFrame(UpdateGraphics);}	
+}
+
+var levelUp = false;
+function UpdateLevel() {	
+	let _oldLevel = game.level;
+	let _newLevel = Math.floor(game.score/5);	
+	levelUp = (_newLevel > _oldLevel)
+	barLevelUp = levelUp ? nextBar : 0;
+	game.level = levelUp ? _newLevel : game.level;
+	console.log("LEVEL UP " + _newLevel)
+}
+
+var nextBar = 0;
+var time = 0;
+function CountTime() {
+	time = context.currentTime;
+	try {
+		nextBar = Math.ceil(time / samples[0].source.buffer.duration) * samples[0].source.buffer.duration;
+	} catch {
+		nextBar = 0;
+	}	
+
+	timeIndicator.innerHTML = Math.floor(time/60).toString().padStart(2,'0') + ':' + Math.round(time%60).toString().padStart(2,'0');
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,7 +163,7 @@ function Play() {
 var bullets = [];
 
 var on = false;
-var sound = false;
+var sound = true;
 
 
 var track = 0;
@@ -108,6 +200,8 @@ function getRandomColor() {
 }
   
 
+
+//#region GESTIONE TOUCH
 function InitTouch(){
  
     var touchsurface = canvas,
@@ -128,6 +222,8 @@ function InitTouch(){
 			else {
 				vel_spaceship = (vel_spaceship > 0) ? vel_spaceship : -vel_spaceship;
 			}
+		} else {
+			Shot();
 		}
     }  
 
@@ -157,3 +253,13 @@ function InitTouch(){
 	}, false)
 
 };
+//#endregion
+
+
+
+
+
+
+
+
+
