@@ -10,23 +10,6 @@ var f16hz, f32hz, f512hz, f2048hz, f8192hz, f16384hz;
 var ranges;
 var a0 = [10], a1 = [0], a2 = [0], a3 = [0], a4 = [0];
 
-var canvasCtx;
-var WIDTH, HEIGHT, CENTERX, CENTERY;
-var canvas = document.createElement("canvas");
-var context = canvas.getContext("2d");
-canvas.style.display = "flex";
-canvas.style.margin = "auto";
-canvas.width = 0.8*window.innerWidth;
-canvas.height = 0.8*window.innerHeight;
-canvas.style.background = "none";
-canvas.addEventListener("click", function() {Play();})
-var x0 = canvas.width/2;
-var y0 = canvas.height/2;
-var overlay;
-
-const field_vR = new Gaussian(1, x0, y0, 1000, 1000);
-var posX = canvas.width/2, posY = canvas.height/2;
-
 window.onload = function() {
 	draw();
 

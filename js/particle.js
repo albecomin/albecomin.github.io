@@ -1,3 +1,20 @@
+var canvasCtx;
+var WIDTH, HEIGHT, CENTERX, CENTERY;
+var canvas = document.createElement("canvas");
+var context = canvas.getContext("2d");
+canvas.style.display = "flex";
+canvas.style.margin = "auto";
+canvas.width = 0.8*window.innerWidth;
+canvas.height = 0.8*window.innerHeight;
+canvas.style.background = "none";
+canvas.addEventListener("click", function() {Play();})
+var x0 = canvas.width/2;
+var y0 = canvas.height/2;
+var overlay;
+
+const field_vR = new Gaussian(1, x0, y0, 1000, 1000);
+var posX = canvas.width/2, posY = canvas.height/2;
+
 var Vx = 10, Vy = 10, gravity = 1;
 var particles = [],
     particleIndex = 0,
@@ -29,7 +46,6 @@ function Particle(color) {
     this.id = particleIndex;
     this.life = 0;
 }
-
 Particle.prototype.draw = function() {
     this.x += this.vx;
     this.y += this.vy;
@@ -64,9 +80,7 @@ Particle.prototype.draw = function() {
     context.arc(this.x, this.y, settings.particleSize, 0, Math.PI*2, true); 
     context.closePath();
     context.fill();
-  }
-
-
+}
 function StartParticles(particle) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -78,20 +92,20 @@ function StartParticles(particle) {
 }
 
 
-function StartDrawing() {
-    setInterval(function() {
-        context.clearRect(0, 0, canvas.width, canvas.height);
+// function StartDrawing() {
+//     setInterval(function() {
+//         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        particles.forEach(function(element) {
-            element.draw();
-        });
+//         particles.forEach(function(element) {
+//             element.draw();
+//         });
         
-    }, 5);   
+//     }, 5);   
     
-    setInterval(function() {
-        particles.push(new Particle());        
-    }, 5);
-}
+//     setInterval(function() {
+//         particles.push(new Particle());        
+//     }, 5);
+// }
 
 
 var toHex = function (int) { 
@@ -100,37 +114,20 @@ var toHex = function (int) {
          hex = "0" + hex;
     }
     return hex;
-  };
-
-
+};
 function Gaussian(a, x0, y0, sx, sy) {
     this.amplitude = a;
     this.x0 = x0;
     this.y0 = y0;
     this.sx2 = Math.pow(sx, 2);
     this.sy2 = Math.pow(sy, 2);
-
-    // z = 10 + _ampl * Math.exp( - ( (Math.pow((x-x0),2)/(2*sigma_x2)) + (Math.pow((y-y0),2)/(2*sigma_y2)) ));
-    
-    // return z;
-}
-
-// Gaussian.prototype = {
-//     getZ: function(x,y) {
-//         //this.amplitude * Math.exp( - ( (Math.pow((x-this.x0),2)/(2*this.sx2)) + (Math.pow((y-this.y0),2)/(2*this.sy2)) ));
-//         return this.amplitude * Math.exp( - ( (Math.pow((x-this.x0),2)/(2*this.sx2)) + (Math.pow((y-this.y0),2)/(2*this.sy2)) ));
-//     }
-// };
-
-Gaussian.prototype.getZ = function(x,y) {
-        //this.amplitude * Math.exp( - ( (Math.pow((x-this.x0),2)/(2*this.sx2)) + (Math.pow((y-this.y0),2)/(2*this.sy2)) ));
-        return this.amplitude * Math.exp( - ( (Math.pow((x-this.x0),2)/(2*this.sx2)) + (Math.pow((y-this.y0),2)/(2*this.sy2)) ));
 };
-
-
+Gaussian.prototype.getZ = function(x,y) {
+    return this.amplitude * Math.exp( - ( (Math.pow((x-this.x0),2)/(2*this.sx2)) + (Math.pow((y-this.y0),2)/(2*this.sy2)) ));
+};
 function getSinT(x,y,y0) {
     return (y-y0)/Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
-}
+};
 function getCosT(x,y,x0) {
     return (x-x0)/Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
-}
+};
