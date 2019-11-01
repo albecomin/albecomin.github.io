@@ -1,5 +1,4 @@
 var canvasCtx;
-var WIDTH, HEIGHT, CENTERX, CENTERY;
 var canvas = document.createElement("canvas");
 var context = canvas.getContext("2d");
 canvas.style.display = "flex";

@@ -14,10 +14,8 @@ window.onload = function() {
 	draw();
 
 	overlay = document.getElementById("overlay");
-	WIDTH = 0.8*window.innerWidth;
-	HEIGHT = 0.8*window.innerHeight;
-	CENTERX = WIDTH/2;
-	CENTERY = HEIGHT/2;
+	overlay.width = 1*window.innerWidth;
+	overlay.height = 1*window.innerHeight;
 
 	document.body.appendChild(canvas); 
 }
