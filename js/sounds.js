@@ -24,6 +24,9 @@ var x0 = canvas.width/2;
 var y0 = canvas.height/2;
 var overlay;
 
+const field_vR = new Gaussian(1, x0, y0, 1000, 1000);
+var posX = canvas.width/2, posY = canvas.height/2;
+
 window.onload = function() {
 	draw();
 

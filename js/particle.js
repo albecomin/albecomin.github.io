@@ -1,8 +1,3 @@
-
-
-const field_vR = new Gaussian(1, x0, y0, 1000, 1000);
-
-var posX = canvas.width/2, posY = canvas.height/2;
 var Vx = 10, Vy = 10, gravity = 1;
 var particles = [],
     particleIndex = 0,
