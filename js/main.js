@@ -9,6 +9,7 @@ var bufferLength;
 var f16hz, f32hz, f512hz, f2048hz, f8192hz, f16384hz;
 var ranges;
 var a0 = [10], a1 = [0], a2 = [0], a3 = [0], a4 = [0];
+var percOfTrack;
 
 window.onload = function() {
 	draw();
@@ -90,6 +91,7 @@ function draw() {
 
 	if (audioCtx) {
 		GetFrequencyRanges();
+		percOfTrack = parseFloat(audioCtx.currentTime/audioElement.duration);
 	}
 	
 	if (avg1(a0) > 0.9) {
@@ -100,7 +102,7 @@ function draw() {
 		document.body.style.background = "#333033"
 	}
 
-	field_vR.a = avg1(a0);
+	field_vR.a = avg1(a0) + avg1(a1);
 	field_vR.sx2 = Math.pow(0 + 400*avg1(a0), 2);
 	field_vR.sy2 = Math.pow(0 + 400*avg1(a0), 2);
 	
@@ -108,11 +110,21 @@ function draw() {
 	// let s = 10 + (avg1(a2))*30 + Math.random()*avg1(a4)*30;
 	// let l = 10 + (avg1(a4))*100 + avg1(a3)*50 + Math.random()*5;
 
-	let h = 225 + Math.random()*5 + avg1(a1)*40 + avg1(a2)*40 + avg1(a3)*40;
-	let s = 10 + Math.random()*5 + (avg1(a2))*30 + avg1(a3)*30;
-	let l = 10 + Math.random()*5 + avg1(a4)*30;
+	// let h = 225 + Math.random()*5 + avg1(a1)*40 + avg1(a2)*40 + avg1(a3)*40;
+	// let s = 10 + Math.random()*5 + (avg1(a2))*30 + avg1(a3)*30;
+	// let l = 10 + Math.random()*5 + avg1(a4)*30;
 
-	var color = HSL(h, s, l);
+	// var color = HSL(h, s, l);
+
+	let _sinA = Math.abs(Math.sin(percOfTrack*6.28));
+	let _sinB = Math.abs(Math.sin(percOfTrack*6.28+3.14/2));
+	console.log(_sinA, _sinB)
+	let _rand = Math.random()*2;
+	let r = 0 + _rand + _sinA*avg1(a3)*100;
+	let g = 0 + _rand + _sinB*avg1(a3)*100 ;
+	let b = 0 + _rand; // + avg1(a4)*100;
+
+	var color = RGBA(r, g, b, 1);
 
 	StartParticles(new Particle(color));
 }
