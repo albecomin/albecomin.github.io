@@ -39,12 +39,35 @@ function Particle(color) {
     this.vy = Math.sin(particleIndex)*Vy;
 
     this.color = color;
+    this.radius =  = settings.particleSize;
+    
     // Add new particle to the index
 
     particleIndex ++;
     this.id = particleIndex;
     this.life = 0;
 }
+
+function Particle(color, size) {
+    // Establish starting positions and velocities
+    this.x = settings.startingX;
+    this.y = settings.startingY;
+    
+    // Random X and Y velocities
+    // this.vx = Math.random() * 20 - 10;
+    // this.vy = Math.random() * 20 - 5;
+    this.vx = Math.cos(particleIndex)*Vx;
+    this.vy = Math.sin(particleIndex)*Vy;
+
+    this.color = color;
+    this.radius = size;
+    // Add new particle to the index
+
+    particleIndex ++;
+    this.id = particleIndex;
+    this.life = 0;
+}
+
 Particle.prototype.draw = function() {
     this.x += this.vx;
     this.y += this.vy;
@@ -76,7 +99,7 @@ Particle.prototype.draw = function() {
     context.stroke= "white"; // "rgb("+(settings.maxLife - this.life)/100*255 + ", "+(settings.maxLife - this.life)/100*255 + ", "+(settings.maxLife - this.life)/100*255 + ")";
     context.fillStyle = this.color; //+ toHex(settings.maxLife - this.life);
     context.globalAlpha = (settings.maxLife - this.life)/100;
-    context.arc(this.x, this.y, settings.particleSize, 0, Math.PI*2, true); 
+    context.arc(this.x, this.y, this.radius, 0, Math.PI*2, true); 
     context.closePath();
     context.fill();
 }

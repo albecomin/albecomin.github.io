@@ -60,7 +60,7 @@ function TransitionDown(a, b, callback) {
 }
 function TransitionUp(a, b, callback) {
 	setTimeout(function() { 
-			console.log((b-a)/b);			
+			//console.log((b-a)/b);			
 			if (a < b) {
 				a = a + 1000; 
 				TransitionUp(a, b, callback);
@@ -118,15 +118,18 @@ function draw() {
 
 	let _sinA = Math.abs(Math.sin(percOfTrack*6.28));
 	let _sinB = Math.abs(Math.sin(percOfTrack*6.28+3.14/2));
-	console.log(_sinA, _sinB)
+	let _sinC = Math.abs(Math.sin(percOfTrack*6.28*16));
+	
+	//console.log(_sinA, _sinB)
 	let _rand = Math.random()*2;
 	let r = 0 + _rand + _sinA*avg1(a3)*100;
 	let g = 0 + _rand + _sinB*avg1(a3)*100 ;
-	let b = 0 + _rand; // + avg1(a4)*100;
-
+	let b = 0 + _rand + _sinC*avg1(a3)*100;
+	//console.log(_sinC)
 	var color = RGBA(r, g, b, 1);
-
-	StartParticles(new Particle(color));
+	var size = 100*(1 - Math.pow(avg1(a1), 2));
+	//console.log(size)
+	StartParticles(new Particle(color, size));
 }
 
 function GetFrequencyRanges() {
