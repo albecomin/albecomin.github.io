@@ -102,19 +102,9 @@ function draw() {
 		document.body.style.background = "#333033"
 	}
 
-	field_vR.a = avg1(a0) + avg1(a1);
-	field_vR.sx2 = Math.pow(0 + 400*avg1(a0), 2);
-	field_vR.sy2 = Math.pow(0 + 400*avg1(a0), 2);
-	
-	// let h = 225 + (avg1(a0))*10 + Math.random()*5 - Math.random()*avg1(a4)*100 - Math.random()*avg1(a3)*100;
-	// let s = 10 + (avg1(a2))*30 + Math.random()*avg1(a4)*30;
-	// let l = 10 + (avg1(a4))*100 + avg1(a3)*50 + Math.random()*5;
-
-	// let h = 225 + Math.random()*5 + avg1(a1)*40 + avg1(a2)*40 + avg1(a3)*40;
-	// let s = 10 + Math.random()*5 + (avg1(a2))*30 + avg1(a3)*30;
-	// let l = 10 + Math.random()*5 + avg1(a4)*30;
-
-	// var color = HSL(h, s, l);
+	field_vR.a = avg1(a0) + 2*avg1(a3);
+	field_vR.sx2 = Math.pow(0 + 250*(1-Math.exp(avg1(a1))), 2);
+	field_vR.sy2 = Math.pow(0 + 250*(1-Math.exp(avg1(a1))), 2);
 
 	let _sinA = Math.abs(Math.sin(percOfTrack*6.28));
 	let _sinB = Math.abs(Math.sin(percOfTrack*6.28+3.14/2));
@@ -126,8 +116,10 @@ function draw() {
 	let g = 0 + _rand + _sinB*avg1(a3)*100 ;
 	let b = 0 + _rand + _sinC*avg1(a3)*100;
 	//console.log(_sinC)
-	var color = RGBA(r, g, b, 1);
-	var size = 100*(1 - Math.pow(avg1(a1), 2));
+	let a =  (avg1(a0) < 0.4 && avg1(a4) < 0.4) ? 0.1*percOfTrack : 0.8;
+	var color = RGBA(r, g, b, a + 0.2*Math.sin(3.14*percOfTrack));
+	//var size = 50*(1-Math.pow(avg1(a2), 2));
+	var size = (avg1(a4) > 0.4 && avg1(a0) < 0.4) ? percOfTrack*100*Math.random() : 95+5*Math.random();
 	//console.log(size)
 	StartParticles(new Particle(color, size));
 }
