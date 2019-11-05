@@ -39,7 +39,7 @@ function Particle(color) {
     this.vy = Math.sin(particleIndex)*Vy;
 
     this.color = color;
-    this.radius =  = settings.particleSize;
+    this.radius = settings.particleSize;
     
     // Add new particle to the index
 
