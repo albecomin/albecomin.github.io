@@ -17,13 +17,3 @@ function RGBA(r, g, b, a) {
 function HSL(h, s, l) {
 	return "hsl("+h+","+s+"%,"+l+"%)";
 }
-
-function getIndexValue(freq) {
-	var nyquist = audioCtx.sampleRate/2;
-	return Math.round(freq/nyquist*dataArray.length);
-}
-
-function getFrequencyValue(index) {
-	var nyquist = audioCtx.sampleRate/2;
-	return Math.round(index/dataArray.length * nyquist);
-}
