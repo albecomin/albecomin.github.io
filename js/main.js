@@ -12,14 +12,28 @@ window.onload = function() {
 
     document.body.addEventListener("click", play);
     document.body.addEventListener("touchmove", function() { interact(event); });
+
 }
 
+function openFullscreen(elem) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+      elem.msRequestFullscreen();
+    }
+  }
+  
 function play() {
     if(!s) {
         s = new Sounds("synth");
         s.init();
         s.source.start();
         overlay.style.display = "none";
+        openFullscreen(document.body)
     }  else {		
         if (s.context.state == 'running') {
             s.context.suspend().then(function() { overlay.style.display = "flex"; })
