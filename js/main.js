@@ -4,7 +4,9 @@ var g = new Graphics(1, 1);
 var s;
 var overlay;
 
+
 window.onload = function() {
+    //AndroidAlignment();
     overlay = document.getElementById("overlay");
     g.init();
        
@@ -12,20 +14,29 @@ window.onload = function() {
 
     document.body.addEventListener("click", play);
     document.body.addEventListener("touchmove", function() { interact(event); });
-
 }
 
-function openFullscreen(elem) {
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) { /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE/Edge */
-      elem.msRequestFullscreen();
+
+function AndroidAlignment() {
+    var ua = navigator.userAgent.toLowerCase();
+    var isAndroid = ua.indexOf("android") > -1;
+    var isMobile = ua.indexOf("mobile") > -1;
+        
+    if(isMobile)
+    {
+        console.log("mobile");
+        if(isAndroid) {
+            console.log("android " + window.innerHeight);
+            document.body.style.height = "90vh";
+        }
     }
-  }
+    else
+    {
+        
+    }
+}
+
+
   
 function play() {
     if(!s) {
@@ -33,7 +44,6 @@ function play() {
         s.init();
         s.source.start();
         overlay.style.display = "none";
-        openFullscreen(document.body)
     }  else {		
         if (s.context.state == 'running') {
             s.context.suspend().then(function() { overlay.style.display = "flex"; })
