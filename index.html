@@ -1,28 +1,70 @@
-<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
 <head>
-    <script type="text/javascript" 	src ="js/physics.js"></script>
-    <script type="text/javascript" 	src ="js/graphics.js"></script>
-    <script type="text/javascript" 	src ="js/sounds.js"></script>
-
-    <script type="text/javascript" 	src ="js/main.js"></script>
-</head>
-<style>
-    body {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+  <meta charset="utf-8">
+  <script type="text/javascript" src="js/delegationdesign.js"></script>
+  <script type="text/javascript" src="js/graphics.js"></script>
+  <style>
+    :root {
+      --primary: #000505;
+      --c1: #437F97;
+      --c2: #849324;
+      --c3: #FFB30F;
+      --text-normal: #FD151B;
     }
-</style>
-<!-- <audio src="sounds/dwys7_1.mp3" type="audio/mpeg"></audio> -->
-<body style="margin: 0; display: flex; height: 100%; width: 100%; max-height: 100%; max-width: 100%; overflow: hidden; background: #333033;">
-<div id="overlay" style="display: flex; background: #FFFFFF30; width: 100%; height: 100%; position: absolute; z-index: 1000;">
+    html {
+      background: var(--primary);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 18px;
+    }
+    body {
+      margin: 0;
+    }
+
+    div {
+      display: flex;
+      margin: auto;
+    }
+
+    button {
+      display: flex;
+      margin: auto;
+      padding: 1rem;
+      font-weight: 400;
+    }
+
+    .control {
+      background: var(--c3);
+      color: var(--text-normal);
+    }
+  
+    .on {
+      opacity: 1.0;
+    }
+
+    .off {
+      opacity: 0.4;
+    }
+
+  </style>
+</head>
+
+<body>
+<div style="height: 20vh; width: 100vw; justify-content: space-around;">
+    <button class="control" onclick="initializeSystem()">Initialize System</button>
+    <button class="control" onclick="play()">Play</button>
+    <button class="instrument off" id="subtractive-synth" onclick="toggleSynth()">Synth</button>
+</div>
+<div id="graphics-container" style="height: 70vh; width: 100vw; justify-content: space-around;">
 
 </div>
+<div style="height: 10vh; width: 100vw; justify-content: space-around;">
+    <text id="avg"></text>
+</div>
+
+<audio style="display: none;"></audio>
 </body>
+
+<script type="text/javascript" src="js/test.js"></script>
 
 </html>
